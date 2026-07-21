@@ -1,6 +1,7 @@
 <template>
   <div class="space-y-6">
-    <h1 class="text-2xl font-bold text-gray-900">Panel de Control</h1>
+    <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
+    <h2 class="text-lg font-semibold text-gray-700">Resumen de tu día · viernes, 17 de julio</h2>
     
     <!-- Resumen General -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
