@@ -26,7 +26,7 @@
             :error="errors.password"
             placeholder="Tu contraseña"
           />
-        </div>
+        </div>hola mundo
 
         <div v-if="authStore.error" class="text-red-600 text-sm text-center">
           {{ authStore.error }}
