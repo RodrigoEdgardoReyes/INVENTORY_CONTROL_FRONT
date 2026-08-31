@@ -1,46 +1,47 @@
+// src/store/authStore.ts
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
+import type { User, LoginCredentials, AuthResponse } from '../types/auth.types';
 import apiClient from '../config/axios';
 
-interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: string;
-}
-
-interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
 export const useAuthStore = defineStore('auth', () => {
-  const user = ref<User | null>(JSON.parse(localStorage.getItem('user') || 'null'));
+  // Estado - Usando los tipos correctos de auth.types.ts
+  const user = ref<User | null>(null);
   const token = ref<string | null>(localStorage.getItem('token'));
   const loading = ref(false);
   const error = ref<string | null>(null);
 
-  const isAuthenticated = computed(() => !!token.value);
+  // Getters computados
+  const isAuthenticated = computed(() => !!token.value && !!user.value);
+  
+  const isOwner = computed(() => user.value?.role === 'OWNER');
+  const isManager = computed(() => user.value?.role === 'MANAGER' || user.value?.role === 'OWNER');
+  const isEmployee = computed(() => ['OWNER', 'MANAGER', 'EMPLOYEE'].includes(user.value?.role || ''));
 
+  // Método para verificar si tiene un módulo específico (para guards)
+  const hasModule = (moduleKey: string): boolean => {
+    // TODO: Conectar con la suscripción real del backend
+    // Por ahora, implementación básica basada en roles
+    const moduleAccess: Record<string, string[]> = {
+      'has_products': ['OWNER', 'MANAGER'],
+      'has_services': ['OWNER', 'MANAGER', 'EMPLOYEE'],
+      'has_exits': ['OWNER', 'MANAGER', 'EMPLOYEE'],
+      'has_entries': ['OWNER', 'MANAGER'],
+      'has_finance': ['OWNER', 'MANAGER', 'VIEWER'],
+    };
+
+    const userRole = user.value?.role || '';
+    return moduleAccess[moduleKey]?.includes(userRole) || false;
+  };
+
+  // Login real con API
   async function login(credentials: LoginCredentials): Promise<boolean> {
     loading.value = true;
     error.value = null;
     
     try {
-    //   // Simulación de login (reemplazar con llamada real a la API)
-    //   const response = await apiClient.post('/auth/login', credentials);
-    //   const { user: userData, token: tokenData } = response.data;
-
-    // CREDENCIALES FIJAS PARA DEMO
-    if (credentials.email === 'admin@inventario.com' && credentials.password === 'admin123') {
-      const userData = {
-        id: '1',
-        email: 'admin@inventario.com',
-        name: 'Administrador',
-        role: 'ADMIN'
-      };
-      const tokenData = 'fake-jwt-token-demo-' + Date.now();
-
+      const response = await apiClient.post<AuthResponse>('/auth/login', credentials);
+      const { user: userData, token: tokenData } = response.data;
       
       user.value = userData;
       token.value = tokenData;
@@ -49,47 +50,77 @@ export const useAuthStore = defineStore('auth', () => {
       localStorage.setItem('user', JSON.stringify(userData));
       
       return true;
-    } else {
-      error.value = 'Credenciales inválidas';
-      return false;
-    }
-    } catch (e: any) {
-      error.value = e.response?.data?.message || 'Error al iniciar sesión';
+    } catch (err: any) {
+      error.value = err.response?.data?.message || 'Error al iniciar sesión';
       return false;
     } finally {
       loading.value = false;
     }
   }
 
+  // Logout
   function logout() {
     user.value = null;
     token.value = null;
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    window.location.href = '/login';
+    // No redirigir aquí, mejor dejar que el router lo maneje
+    // window.location.href = '/login';
   }
 
+  // Verificar autenticación
   async function checkAuth(): Promise<boolean> {
-    if (!token.value) return false;
+    if (!token.value) {
+      logout();
+      return false;
+    }
     
     try {
-      const response = await apiClient.get('/auth/profile');
-      user.value = response.data;
+      const response = await apiClient.get<{ user: User }>('/auth/me');
+      user.value = response.data.user || response.data;
       return true;
-    } catch {
+    } catch (error) {
       logout();
       return false;
     }
   }
 
+  // Restaurar sesión desde localStorage
+  function restoreSession(): void {
+    const storedUser = localStorage.getItem('user');
+    const storedToken = localStorage.getItem('token');
+    
+    if (storedUser && storedToken) {
+      try {
+        user.value = JSON.parse(storedUser);
+        token.value = storedToken;
+      } catch (error) {
+        logout();
+      }
+    }
+  }
+
+  // Inicializar restaurando sesión
+  restoreSession();
+
   return {
+    // Estado
     user,
     token,
     loading,
     error,
+    
+    // Getters
     isAuthenticated,
+    isOwner,
+    isManager,
+    isEmployee,
+    
+    // Métodos
     login,
     logout,
-    checkAuth
+    checkAuth,
+    hasModule,
+    restoreSession,
   };
 });

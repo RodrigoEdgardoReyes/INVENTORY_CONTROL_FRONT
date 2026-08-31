@@ -1,36 +1,43 @@
 import axios from 'axios';
+import type { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
+import { useAuthStore } from '../store/authStore';
 
-const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
-  timeout: 10000,
+const apiClient: AxiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  timeout: 30000,
   headers: {
-    'Content-Type': 'application/json'
-  }
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  },
 });
 
-// Interceptor para agregar token JWT
+// Interceptor para agregar token
 apiClient.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
+  (config: InternalAxiosRequestConfig) => {
+    const authStore = useAuthStore();
+    const token = authStore.token;
+    
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error: AxiosError) => Promise.reject(error)
 );
 
-// Interceptor para manejar errores de respuesta
+// Interceptor para manejar errores
 apiClient.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error: AxiosError) => {
+    const authStore = useAuthStore();
+    
     if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      // Token expirado o inválido
+      authStore.logout();
       window.location.href = '/login';
     }
+    
     return Promise.reject(error);
   }
 );
