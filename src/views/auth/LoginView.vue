@@ -33,19 +33,10 @@
           {{ loading ? 'Cargando...' : 'Iniciar Sesión' }}
         </button>
         
-        
         <p v-if="error" class="text-red-600 text-sm text-center">{{ error }}</p>
       </form>
     </div>
   </div>
-  <!-- En Login.vue, dentro del template -->
-<button 
-  @click="skipOnboarding" 
-  type="button"
-  class="w-full mt-2 py-2 px-4 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
->
-  Saltar onboarding (modo prueba)
-</button
 </template>
 
 <script setup lang="ts">
@@ -100,24 +91,6 @@ const handleLogin = async () => {
     error.value = 'Error al iniciar sesión';
   } finally {
     loading.value = false;
-  }
-};
-
-const skipOnboarding = () => {
-  // Simular que el usuario tiene un businessId para pruebas
-  if (authStore.user) {
-    authStore.user.businessId = 'demo-business-123';
-    authStore.user.business = {
-      id: 'demo-business-123',
-      name: 'Mi Negocio de Prueba',
-      businessType: 'RETAIL',
-    };
-    
-    // Guardar en localStorage para persistencia
-    localStorage.setItem('user', JSON.stringify(authStore.user));
-    
-    // Redirigir al dashboard
-    router.push('/dashboard');
   }
 };
 </script>
