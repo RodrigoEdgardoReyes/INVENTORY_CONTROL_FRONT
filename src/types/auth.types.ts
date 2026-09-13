@@ -19,6 +19,11 @@ export interface LoginCredentials {
   password: string;
 }
 
+export interface LoginResponse {
+  user: User;
+  token: string;
+}
+
 export interface RegisterData {
   name: string;
   email: string;
