@@ -1,9 +1,9 @@
-<template>
+<!-- <template>
   <div class="space-y-6">
     <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
     <h2 class="text-lg font-semibold text-gray-700">Resumen de tu día · viernes, 17 de julio</h2>
     
-    <!-- Resumen General -->
+    <!-- Resumen General --
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       <AppCard :loading="dashboardStore.loading">
         <div class="text-center">
@@ -42,7 +42,7 @@
       </AppCard>
     </div>
 
-    <!-- Resumen Financiero -->
+    <!-- Resumen Financiero --
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <AppCard title="Ingresos Totales" :loading="dashboardStore.loading">
         <div class="text-2xl font-bold text-green-600">
@@ -66,7 +66,7 @@
       </AppCard>
     </div>
 
-    <!-- Últimos Movimientos -->
+    <!-- Últimos Movimientos --
     <AppCard title="Últimos Movimientos" :loading="dashboardStore.loading">
       <AppTable
         :columns="movementColumns"
@@ -122,4 +122,69 @@ function formatCurrency(value: number): string {
 onMounted(() => {
   dashboardStore.fetchSummary();
 });
+</script> -->
+
+
+
+
+
+
+
+
+<!-- src/views/dashboard/Dashboard.vue -->
+<template>
+  <div class="p-6">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">📊 Dashboard</h1>
+    
+    <div class="p-4 bg-green-50 border border-green-200 rounded-lg mb-6">
+      <p class="text-sm text-green-700">
+        ✅ Bienvenido, <strong>{{ authStore.user?.name }}</strong>
+      </p>
+      <p class="text-sm text-green-700 mt-1">
+        🏢 Negocio: <strong>{{ authStore.user?.business?.name || 'No configurado' }}</strong>
+      </p>
+      <p class="text-sm text-green-700 mt-1">
+        👤 Rol: <strong>{{ authStore.user?.role }}</strong>
+      </p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h3 class="text-sm font-medium text-gray-500">📦 Productos</h3>
+        <p class="text-2xl font-bold mt-2">0</p>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h3 class="text-sm font-medium text-gray-500">💰 Ventas</h3>
+        <p class="text-2xl font-bold mt-2">0</p>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h3 class="text-sm font-medium text-gray-500">📈 Ingresos</h3>
+        <p class="text-2xl font-bold mt-2">$0</p>
+      </div>
+    </div>
+    
+    <div class="mt-6">
+      <button 
+        @click="logout"
+        class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+      >
+        Cerrar Sesión
+      </button>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useAuthStore } from '../../../store/authStore';
+import { useRouter } from 'vue-router';
+
+const authStore = useAuthStore();
+const router = useRouter();
+
+const logout = () => {
+  authStore.logout();
+  router.push('/login');
+};
 </script>
