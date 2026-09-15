@@ -19,18 +19,27 @@ const routes: RouteRecordRaw[] = [
   //   component: () => import('../views/auth/RegisterView.vue'),
   //   meta: { public: true },
   // },
-  // {
-  //   path: '/onboarding',
-  //   name: 'Onboarding',
-  //   component: () => import('../views/auth/OnboardingView.vue'),
-  //   meta: { requiresAuth: true },
-  // },
+   {
+     path: '/onboarding',
+     name: 'Onboarding',
+     component: () => import('../views/auth/Onboarding.vue'),
+     meta: { requiresAuth: true },
+   },
   {
     path: '/dashboard',
     name: 'Dashboard',
-    // component: () => import('../views/dashboard/Dashboard.vue'),
     component: () => import('../views/auth/dashboard/DashboardView.vue'),
     meta: { requiresAuth: true },
+  },
+  {
+    path: '/products',
+    name: 'Products',
+    component: () => import('../views/auth/ProductView.vue'),
+    meta: { 
+      requiresAuth: true, 
+      module: 'has_products',
+      role: ['OWNER', 'MANAGER'],
+    },
   },
   // {
   //   path: '/products',
