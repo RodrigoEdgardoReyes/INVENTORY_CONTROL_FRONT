@@ -13,12 +13,12 @@ const routes: RouteRecordRaw[] = [
     component: () => import('../views/auth/LoginView.vue'),
     meta: { public: true },
   },
-  // {
-  //   path: '/register',
-  //   name: 'Register',
-  //   component: () => import('../views/auth/RegisterView.vue'),
-  //   meta: { public: true },
-  // },
+  {
+    path: '/register',
+    name: 'Register',
+    component: () => import('../views/auth/Register.vue'),
+    meta: { public: true },
+  },
    {
      path: '/onboarding',
      name: 'Onboarding',
@@ -41,6 +41,12 @@ const routes: RouteRecordRaw[] = [
       role: ['OWNER', 'MANAGER'],
     },
   },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: () => import('../views/auth/dashboard/DashboardView.vue'),
+    meta: { requiresAuth: true },
+  }
   // {
   //   path: '/products',
   //   name: 'Products',
