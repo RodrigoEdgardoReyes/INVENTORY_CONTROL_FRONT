@@ -1,17 +1,29 @@
+export type UserRole = 'OWNER' | 'MANAGER' | 'EMPLOYEE' | 'VIEWER';
+
+export interface Business {
+  id: string;
+  name: string;
+  businessType: string;
+  logoUrl?: string | null;
+  currency?: string;
+  timezone?: string;
+  taxPercentage?: string;
+  active: boolean;
+}
+
 export interface User {
   id: string;
   name: string;
   email: string;
-  role: 'OWNER' | 'MANAGER' | 'EMPLOYEE' | 'VIEWER';
+  //role: 'OWNER' | 'MANAGER' | 'EMPLOYEE' | 'VIEWER';
+  role: UserRole;
   businessId?: string;
-  business?: {
-    id: string;
-    name: string;
-    businessType: string;
-  };
+  business?: Business;
+  lastLogin?: string;
+  permissions?: Record<string, unknown>;
   active: boolean;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
 }
 
 export interface LoginCredentials {
@@ -22,6 +34,11 @@ export interface LoginCredentials {
 export interface LoginResponse {
   user: User;
   token: string;
+  refreshToken?: string;
+}
+
+export interface MeResponse {
+  user: User;
 }
 
 export interface RegisterData {
@@ -33,7 +50,7 @@ export interface RegisterData {
   planId: string;
 }
 
-export interface AuthResponse {
+/*export interface AuthResponse {
   user: User;
   token: string;
   business?: {
@@ -49,7 +66,7 @@ export interface AuthResponse {
     features: string[];
   };
 }
-
+*/
 export interface BusinessType {
   id: string;
   name: string;
