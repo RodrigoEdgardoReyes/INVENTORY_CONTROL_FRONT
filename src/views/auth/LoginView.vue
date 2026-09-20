@@ -112,8 +112,8 @@ onMounted(() => {
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '../../store/authStore';
-import type { LoginCredentials } from '../../types/auth.types';
+import { useAuthStore } from '@/store/authStore';
+import type { LoginCredentials } from '@/types/auth.types';
 
 const router = useRouter();
 const authStore = useAuthStore();
