@@ -14,3 +14,5 @@ export interface ApiError {
   errors?: Record<string, string[]>;
   code?: string;
 }
+
+// Eliminar de ser necesario ya que common.types.ts ya tiene la definición de ApiResponse y ApiError
