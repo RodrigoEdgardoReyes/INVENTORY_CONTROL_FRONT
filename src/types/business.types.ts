@@ -1,5 +1,7 @@
 import type { Business } from './auth.types';
 
+export type PlanLevel = 'LITE' | 'PRO' | 'MASTER' | 'EMPIRE';
+
 export type BusinessTypeValue =
   | 'inventario_general'
   | 'barberia'
@@ -14,18 +16,46 @@ export type BusinessTypeValue =
 export interface Plan {
   id: string;
   name: string;
+  businessType: BusinessTypeValue | string;
+  level: PlanLevel;
+  price: string; // ⚠️ Viene como string desde el backend
   description: string;
-  level: 'BASIC' | 'PRO' | 'ENTERPRISE';
-  price: number;
-  currency: string;
-  interval: 'monthly' | 'yearly';
-  features: string[];
-  limits: {
-    maxUsers: number;
-    maxProducts: number;
-    maxBusinesses: number;
+  features: Record<string, unknown>; // objeto vacío actualmente
+  maxUsers: number;
+  maxBranches: number;
+  hasProducts: boolean;
+  hasEntries: boolean;
+  hasExits: boolean;
+  hasServices: boolean;
+  hasKardex: boolean;
+  hasFinance: boolean;
+  hasCommissions: boolean;
+  hasApiAccess: boolean;
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  _count?: {
+    subscriptions: number;
   };
-  recommended?: boolean;
+}
+
+/**
+ * Respuesta paginada de planes
+ */
+export interface PlansResponse {
+  plans: Plan[];
+}
+
+/**
+ * Payload para crear negocio
+ */
+export interface CreateBusinessPayload {
+  name: string;
+  businessType: BusinessTypeValue | string;
+  currency?: string;
+  timezone?: string;
+  taxPercentage?: string;
 }
 
 /**
@@ -35,11 +65,29 @@ export interface Subscription {
   id: string;
   planId: string;
   planName: string;
-  level: string;
+  level: PlanLevel;
   status: 'active' | 'pending' | 'cancelled' | 'expired';
   startDate: string;
   endDate: string;
   features: string[];
+}
+
+/**
+ * Payload de pago (simulado/fake)
+ */
+export interface PaymentPayload {
+  planId: string;
+  businessId: string;
+  cardNumber: string;
+  cardHolder: string;
+  expiryDate: string;
+  cvv: string;
+}
+
+export interface PaymentResponse {
+  success: boolean;
+  subscription?: Subscription;
+  message?: string;
 }
 
 /**
