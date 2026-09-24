@@ -45,9 +45,9 @@ export interface RegisterData {
   name: string;
   email: string;
   password: string;
-  businessType: string;
-  businessName: string;
-  planId: string;
+  //businessType: string;
+  //businessName: string;
+  //planId: string;
 }
 
 /*export interface AuthResponse {
