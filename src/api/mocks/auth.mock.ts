@@ -83,8 +83,8 @@ export const authMock = {
       permissions: {},
       business: {
         id: 'mock-business-' + Date.now(),
-        name: data.businessName,
-        businessType: data.businessType,
+        // name: data.businessName, no es obligatorio de momento en bissnes type en auth types -- VERFICAR
+        // businessType: data.businessType,
         active: true,
         currency: 'USD',
         timezone: 'America/El_Salvador',
