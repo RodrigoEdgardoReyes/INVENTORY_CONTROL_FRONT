@@ -2,8 +2,8 @@ export type UserRole = 'OWNER' | 'MANAGER' | 'EMPLOYEE' | 'VIEWER';
 
 export interface Business {
   id: string;
-  name: string;
-  businessType: string;
+  name?: string;
+  businessType?: string;
   logoUrl?: string | null;
   currency?: string;
   timezone?: string;
