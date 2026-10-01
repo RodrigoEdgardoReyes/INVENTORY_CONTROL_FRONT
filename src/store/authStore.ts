@@ -108,7 +108,7 @@
 // src/store/auth.store.ts
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { authApi } from '../api';
+import { authApi } from '@/api';
 import type {
   User,
   LoginCredentials,
@@ -116,7 +116,9 @@ import type {
   LoginResponse,
   MeResponse,
   UserRole,
+  Business,
 } from '../types/auth.types';
+import type { Plan } from '@/types/business.types'
 
 export const useAuthStore = defineStore('auth', () => {
   // ─────────────────────────────────────────
@@ -129,7 +131,18 @@ export const useAuthStore = defineStore('auth', () => {
   );
   const isLoading = ref(false);
   const error = ref<string | null>(null);
-  const features = ref<string[]>([]);
+
+  // Features del plan (para guards de modulos)
+  const planFeatures = ref<{
+    hasProducts: boolean;
+    hasEntries: boolean;
+    hasExits: boolean;
+    hasServices: boolean;
+    hasKardex: boolean;
+    hasFinance: boolean;
+    hasCommissions: boolean;
+    hasApiAccess: boolean;
+  } | null>(null);
 
   // ─────────────────────────────────────────
   // GETTERS
@@ -146,13 +159,23 @@ export const useAuthStore = defineStore('auth', () => {
   const businessId = computed(() => user.value?.businessId);
   const hasBusiness = computed(() => !!user.value?.businessId);
 
-  const hasModule = (moduleKey: string): boolean =>
-    features.value.includes(moduleKey);
-
   const hasRole = (roles: UserRole | UserRole[]): boolean => {
     const role = user.value?.role;
     if (!role) return false;
     return Array.isArray(roles) ? roles.includes(role) : role === roles;
+  };
+
+   /**
+   * Verifica si el usuario tiene un módulo específico
+   * Adaptado a los booleanos del backend: hasProducts, hasServices, etc.
+   */
+  const hasModule = (moduleKey: string): boolean => {
+    if (!planFeatures.value) {
+      // Si no tenemos features, permitimos por defecto (fallback)
+      // Esto se puede endurecer después si quieres bloquear
+      return true;
+    }
+    return (planFeatures.value as Record<string, boolean>)[moduleKey] === true;
   };
 
   // ─────────────────────────────────────────
@@ -172,6 +195,31 @@ export const useAuthStore = defineStore('auth', () => {
     if (data.user) {
       localStorage.setItem('user', JSON.stringify(data.user));
     }
+  }
+
+  function setPlanFeatures(plan: Plan) {
+    planFeatures.value = {
+      hasProducts: plan.hasProducts,
+      hasEntries: plan.hasEntries,
+      hasExits: plan.hasExits,
+      hasServices: plan.hasServices,
+      hasKardex: plan.hasKardex,
+      hasFinance: plan.hasFinance,
+      hasCommissions: plan.hasCommissions,
+      hasApiAccess: plan.hasApiAccess,
+    };
+    // Persistir para que sobreviva recargas
+    localStorage.setItem(
+      'planFeatures',
+      JSON.stringify(planFeatures.value)
+    );
+  }
+
+  function updateUserBusiness(business: Business) {
+    if (!user.value) return;
+    user.value.businessId = business.id;
+    user.value.business = business;
+    localStorage.setItem('user', JSON.stringify(user.value));
   }
 
   async function login(credentials: LoginCredentials): Promise<LoginResponse> {
@@ -230,24 +278,30 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = null;
     token.value = null;
     refreshToken.value = null;
-    features.value = [];
+    planFeatures.value = null;
     error.value = null;
 
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
+    localStorage.removeItem('planFeatures');
+    localStorage.removeItem('onboarding_state');
   }
 
   /** Restaura sesión desde localStorage al arrancar la app */
   function restoreSession() {
     const storedUser = localStorage.getItem('user');
     const storedToken = localStorage.getItem('token');
+    const storedFeatures = localStorage.getItem('planFeatures');
 
     if (storedUser && storedToken) {
       try {
         user.value = JSON.parse(storedUser);
         token.value = storedToken;
         refreshToken.value = localStorage.getItem('refreshToken');
+        if (storedFeatures){
+          planFeatures.value = JSON.parse(storedFeatures);
+        }
         console.log('♻️ Sesión restaurada:', user.value?.email);
       } catch {
         logout();
@@ -268,7 +322,8 @@ export const useAuthStore = defineStore('auth', () => {
     refreshToken,
     isLoading,
     error,
-    features,
+    planFeatures,
+
     // getters
     isAuthenticated,
     isOwner,
@@ -280,6 +335,7 @@ export const useAuthStore = defineStore('auth', () => {
     hasBusiness,
     hasModule,
     hasRole,
+
     // actions
     login,
     register,
@@ -287,5 +343,7 @@ export const useAuthStore = defineStore('auth', () => {
     logout,
     restoreSession,
     setAuthData,
+    setPlanFeatures,
+    updateUserBusiness,
   };
 });
