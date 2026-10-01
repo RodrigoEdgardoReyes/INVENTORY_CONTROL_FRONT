@@ -188,12 +188,12 @@ export const ROUTES = {
   REGISTER: "/register",
 
   // Onboarding (3 pasos)
-  ONBOARDING_BUSSINESS_TYPE: '/onboarding/business-type',
+  ONBOARDING_BUSINESS_TYPE: '/onboarding/business-type',
   ONBOARDING_PLANS: '/onboarding/plans',
   ONBOARDING_PAYMENT: "/onboarding/payment",
 
 // App
-  PLANS: "/plans",
+//   PLANS: "/plans",
   DASHBOARD: "/dashboard",
   PRODUCTS: "/products",
   SERVICES: "/services",
