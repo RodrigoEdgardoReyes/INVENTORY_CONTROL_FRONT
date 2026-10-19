@@ -120,6 +120,21 @@ import type {
 } from '../types/auth.types';
 import type { Plan } from '@/types/business.types'
 
+// ─────────────────────────────────────────
+// STORE DE AUTENTICACIÓN
+// ─────────────────────────────────────────
+// features del plan: hasProducts, hasServices, etc. para guards de módulos
+export interface PlanFeatures {
+  hasProducts: boolean;
+  hasEntries: boolean;
+  hasExits: boolean;
+  hasServices: boolean;
+  hasKardex: boolean;
+  hasFinance: boolean;
+  hasCommissions: boolean;
+  hasApiAccess: boolean;
+}
+
 export const useAuthStore = defineStore('auth', () => {
   // ─────────────────────────────────────────
   // STATE

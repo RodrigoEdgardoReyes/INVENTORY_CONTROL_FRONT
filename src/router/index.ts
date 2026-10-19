@@ -1,52 +1,81 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { setupRouterGuards } from './guard';
+import { ROUTES } from '@/config/constants';
 import type { RouteRecordRaw } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    redirect: '/dashboard',
+    redirect: ROUTES.DASHBOARD,
   },
+
+  // ─────────────────────────────────────────
+  // RUTAS PÚBLICAS
+  // ─────────────────────────────────────────
   {
-    path: '/login',
+    path: ROUTES.LOGIN,
     name: 'Login',
-    component: () => import('../views/auth/LoginView.vue'),
+    component: () => import('@/views/auth/Login.vue'),
     meta: { public: true },
   },
   {
-    path: '/register',
+    path: ROUTES.REGISTER,
     name: 'Register',
-    component: () => import('../views/auth/Register.vue'),
+    component: () => import('@/views/auth/Register.vue'),
     meta: { public: true },
   },
-   {
-     path: '/onboarding',
-     name: 'Onboarding',
-     component: () => import('../views/auth/Onboarding.vue'),
-     meta: { requiresAuth: true },
-   },
+
+  // ─────────────────────────────────────────
+  // ONBOARDING (4 pasos)
+  // ─────────────────────────────────────────
   {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: () => import('../views/auth/dashboard/DashboardView.vue'),
+    path: ROUTES.ONBOARDING_BUSINESS_TYPE,
+    name: 'OnboardingBusinessType',
+    component: () =>
+      import('@/views/onboarding/BusinessTypeSelector.vue'),
     meta: { requiresAuth: true },
   },
   {
-    path: '/products',
-    name: 'Products',
-    component: () => import('../views/auth/ProductView.vue'),
-    meta: { 
-      requiresAuth: true, 
-      module: 'has_products',
-      role: ['OWNER', 'MANAGER'],
-    },
+    path: ROUTES.ONBOARDING_PLANS,
+    name: 'OnboardingPlans',
+    component: () => import('@/views/onboarding/PricingPlans.vue'),
+    meta: { requiresAuth: true },
   },
   {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: () => import('../views/auth/dashboard/DashboardView.vue'),
+    path: ROUTES.ONBOARDING_PAYMENT,
+    name: 'OnboardingPayment',
+    component: () => import('@/views/onboarding/PaymentCheckout.vue'),
     meta: { requiresAuth: true },
-  }
+  },
+  {
+  path: ROUTES.ONBOARDING_BUSINESS_NAME,
+  name: 'OnboardingBusinessName',
+  component: () => import('@/views/onboarding/BusinessNameSetup.vue'),
+  meta: { requiresAuth: true },
+},
+
+  // ─────────────────────────────────────────
+  // APP (requiere negocio)
+  // ─────────────────────────────────────────
+  {
+    path: ROUTES.DASHBOARD,
+    name: 'Dashboard',
+    component: () => import('@/views/dashboard/DashboardView.vue'),
+    meta: { requiresAuth: true },
+  },
+
+  // Rutas pendientes (descomenta cuando existan los componentes):
+  // {
+  //   path: ROUTES.PRODUCTS,
+  //   name: 'Products',
+  //   component: () => import('@/views/products/ProductList.vue'),
+  //   meta: { requiresAuth: true, module: 'hasProducts' },
+  // },
+  // {
+  //   path: '/',
+  //   redirect: '/dashboard',
+  // },
+  
   // {
   //   path: '/products',
   //   name: 'Products',

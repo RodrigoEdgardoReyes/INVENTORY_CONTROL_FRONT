@@ -12,6 +12,9 @@ export * from './common.types';
 // Productos 
 export * from './product.types';
 
+// Onboarding
+export * from './onboarding.types';
+
 // Servicios (pendiente de crear)
 // export * from './service.types';
 

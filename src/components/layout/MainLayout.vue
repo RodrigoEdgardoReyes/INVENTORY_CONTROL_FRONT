@@ -90,7 +90,7 @@
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '../../store/authStore';
-import { useProductsStore } from '../../store/productStore';
+import { useProductsStore } from '../../store/product.store';
 
 const route = useRoute();
 const router = useRouter();

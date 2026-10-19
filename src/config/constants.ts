@@ -187,10 +187,11 @@ export const ROUTES = {
   LOGIN: "/login",
   REGISTER: "/register",
 
-  // Onboarding (3 pasos)
+  // Onboarding (4 pasos)
   ONBOARDING_BUSINESS_TYPE: '/onboarding/business-type',
   ONBOARDING_PLANS: '/onboarding/plans',
   ONBOARDING_PAYMENT: "/onboarding/payment",
+  ONBOARDING_BUSINESS_NAME: '/onboarding/business-name',
 
 // App
 //   PLANS: "/plans",
