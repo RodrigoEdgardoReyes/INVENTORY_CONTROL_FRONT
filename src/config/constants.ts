@@ -16,6 +16,10 @@ export const USER_ROLES: Record<
   UserRole,
   { label: string; description: string }
 > = {
+  SUPER_ADMIN:{
+    label: "Super Administrador",
+    description: "Control total del sistema, gestión de usuarios y permisos"
+  },
   OWNER: {
     label: "Propietario",
     description: "Acceso completo al sistema y configuración",
@@ -39,6 +43,7 @@ export const ROLE_HIERARCHY: UserRole[] = [
   "MANAGER",
   "EMPLOYEE",
   "VIEWER",
+  "SUPER_ADMIN",
 ];
 
 // ─────────────────────────────────────────────

@@ -2,12 +2,15 @@ import { authApiReal } from './auth.api';
 import { authMock } from './mocks/auth.mock';
 import { businessApiReal } from './business.api';
 import { businessMock } from './mocks/business.mock';
+import { dashboardApiReal } from './dashboard.api';
+import { dashboardMock } from './mocks/dashboard.mock';
 
 // ─────────────────────────────────────────────
 // Interruptores por módulo
 // ─────────────────────────────────────────────
 const USE_MOCK_AUTH = import.meta.env.VITE_USE_MOCK_AUTH === 'true';
 const USE_MOCK_BUSINESS = import.meta.env.VITE_MOCK_BUSINESS === 'true';
+const USE_MOCK_DASHBOARD = import.meta.env.VITE_USE_MOCK_DASHBOARD === 'true';
 
 // Log de modo (util para debug)
 if(import.meta.env.DEV){
@@ -23,6 +26,7 @@ console.log(`🌐 API Base: ${import.meta.env.VITE_API_URL}`);
 // ─────────────────────────────────────────────
 export const authApi = USE_MOCK_AUTH ? authMock : authApiReal;
 export const businessApi = USE_MOCK_BUSINESS ? businessMock : businessApiReal;
+export const dashboardApi = USE_MOCK_DASHBOARD ? dashboardMock : dashboardApiReal;
 
 // Cuando agregue más módulos, será:
 // export const businessApi = USE_MOCK_BUSINESS ? businessMock : businessApiReal;
