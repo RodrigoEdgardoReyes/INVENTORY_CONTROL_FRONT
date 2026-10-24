@@ -79,12 +79,12 @@ export const authMock = {
       businessId: 'mock-business-' + Date.now(),
       active: true,
       createdAt: new Date().toISOString(),
-      // updatedAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       permissions: {},
       business: {
         id: 'mock-business-' + Date.now(),
-        // name: data.businessName, no es obligatorio de momento en bissnes type en auth types -- VERFICAR
-        // businessType: data.businessType,
+        name: '' + data.name + ' (MOCK)',
+        businessType: 'barberia',
         active: true,
         currency: 'USD',
         timezone: 'America/El_Salvador',
