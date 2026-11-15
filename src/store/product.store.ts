@@ -1,139 +1,164 @@
 // src/store/product.store.ts
-import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
-import type { Product } from '@/types/product.types';
+import { defineStore } from "pinia";
+import { ref, computed } from "vue";
+import { productApi, categoryApi } from "@/api";
+import { useAuthStore } from "@/store/authStore";
+import type {
+  Product,
+  Category,
+  ProductFormData,
+  ProductFilters,
+} from "@/types/product.types";
 
-export const useProductsStore = defineStore('products', () => {
-  // ─────────────────────────────────────────
-  // STATE
-  // ─────────────────────────────────────────
-  const products = ref<Product[]>([
-    {
-      id: '1',                          // ← string, no number
-      sku: 'HP-001',
-      name: 'Laptop HP',
-      category: 'Electrónicos',
-      description: 'Laptop 16GB RAM',
-      stock: 15,
-      minStock: 5,
-      purchasePrice: 700,
-      salePrice: 899.99,
-      createdAt: new Date('2024-01-01'),
-      updatedAt: new Date('2024-01-15'),
-      active: true,
-    },
-    {
-      id: '2',
-      sku: 'LG-002',
-      name: 'Mouse Logitech',
-      category: 'Periféricos',
-      stock: 45,
-      minStock: 10,
-      purchasePrice: 20,
-      salePrice: 29.99,
-      createdAt: new Date('2024-01-02'),
-      updatedAt: new Date('2024-01-16'),
-      active: true,
-    },
-    {
-      id: '3',
-      sku: 'SM-003',
-      name: 'Monitor Samsung',
-      category: 'Electrónicos',
-      stock: 8,
-      minStock: 5,
-      purchasePrice: 250,
-      salePrice: 299.99,
-      createdAt: new Date('2024-01-03'),
-      updatedAt: new Date('2024-01-17'),
-      active: true,
-    },
-  ]);
+type CreateProductPayload = ProductFormData & { businessId: string };
 
-  const loading = ref(false);
-  const searchQuery = ref('');
-  const categoryFilter = ref('');
+export const useProductsStore = defineStore("products", () => {
+  const products = ref<Product[]>([]);
+  const categories = ref<Category[]>([]);
+  const isLoading = ref(false);
+  const error = ref<string | null>(null);
 
-  // ─────────────────────────────────────────
-  // GETTERS
-  // ─────────────────────────────────────────
-  const categories = computed(() => {
-    const cats = new Set(products.value.map((p) => p.category));
-    return Array.from(cats);
+  // Filtros
+  const filters = ref<ProductFilters>({
+    search: "",
+    categoryId: "",
+    lowStock: false,
+    page: 1,
+    limit: 10,
   });
 
-  const filteredProducts = computed(() => {
-    let result = products.value;
+  const totalPages = ref(1);
+  const totalItems = ref(0);
 
-    if (searchQuery.value) {
-      const query = searchQuery.value.toLowerCase();
-      result = result.filter(
-        (p) =>
-          p.name.toLowerCase().includes(query) ||
-          p.sku.toLowerCase().includes(query)
-      );
+  async function fetchCategories() {
+    const authStore = useAuthStore();
+    const businessId = authStore.user?.businessId;
+
+    if (!businessId) {
+      console.warn("No hay businessId para cargar categorías");
+      return;
     }
 
-    if (categoryFilter.value) {
-      result = result.filter((p) => p.category === categoryFilter.value);
+    try {
+      console.log("🔍 Buscando categorías para el negocio:", businessId);
+
+      const fetchCategoriesFn = categoryApi.getCategories as (
+        id: string,
+        type: "PRODUCT" | "SERVICE",
+      ) => Promise<Category[]>;
+
+      console.log("🔍 Buscando categorías para el negocio:", businessId);
+
+      // LOG
+      const result = await fetchCategoriesFn(businessId, "PRODUCT");
+      console.log("✅ Categorías recibidas del backend:", result);
+      categories.value = result;
+    } catch (e) {
+      console.error("Error cargando categorías", e);
+    }
+  }
+
+  async function fetchProducts() {
+    const authStore = useAuthStore();
+    const businessId = authStore.user?.businessId;
+
+    if (!businessId) {
+      console.warn("No hay businessId para cargar productos");
+      return;
     }
 
-    return result;
-  });
+    isLoading.value = true;
+    try {
+      const response = await productApi.getProducts({
+        businessId: businessId,
+        filters: filters.value,
+      });
 
-  // ─────────────────────────────────────────
-  // ACTIONS
-  // ─────────────────────────────────────────
-  const fetchProducts = async () => {
-    loading.value = true;
-    // Simular API
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    loading.value = false;
-  };
+      //products.value = response.products;
+      // ✅ FILTRADO CLAVE: Solo mostramos los productos que estén activos
+      products.value = response.products.filter((p) => p.active !== false);
+      totalPages.value = response.pagination.totalPages;
+      totalItems.value = response.pagination.total;
+    } catch (e: any) {
+      error.value = e.message || "Error al cargar productos";
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
-  const createProduct = async (product: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => {
-    loading.value = true;
-    await new Promise((resolve) => setTimeout(resolve, 500));
+  // async function createProduct(data: ProductFormData) {
+  //   try {
+  //     const newProduct = await productApi.createProduct(data);
+  //     await fetchProducts(); // Refrescar la tabla
+  //     return newProduct;
+  //   } catch (e) {
+  //     console.error("Error creando producto", e);
+  //     throw e;
+  //   }
+  // }
 
-    const newProduct: Product = {
-      ...product,
-      id: String(products.value.length + 1),  // ← string
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      active: true,
-    };
+  async function createProduct(data: ProductFormData) {
+    const authStore = useAuthStore();
+    const businessId = authStore.user?.businessId;
 
-    products.value.push(newProduct);
-    loading.value = false;
-    return true;
-  };
+    if (!businessId) {
+      throw new Error("No hay negocio activo para crear el producto");
+    }
 
-  const updateProduct = async (id: string, product: Partial<Product>) => {
-    loading.value = true;
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    const index = products.value.findIndex((p) => p.id === id);
-    if (index !== -1) {
-      products.value[index] = {
-        ...products.value[index],
-        ...product,
-        updatedAt: new Date(),  // ← actualizar fecha
+    try {
+      const payload: CreateProductPayload = {
+        ...data,
+        businessId,
+        purchasePrice: Number(data.purchasePrice),
+        salePrice: Number(data.salePrice),
+        stock: Number(data.stock),
+        minStock: Number(data.minStock),
       };
-    }
 
-    loading.value = false;
-    return true;
-  };
+      const newProduct = await productApi.createProduct(payload);
+      await fetchProducts(); // Refrescar la lista
+      return newProduct;
+    } catch (e) {
+      console.error("Error creando producto", e);
+      throw e;
+    }
+  }
+
+  async function updateProduct(id: string, data: ProductFormData) {
+    try {
+      const updated = await productApi.updateProduct(id, data);
+      await fetchProducts(); // Refrescar la tabla
+      return updated;
+    } catch (e) {
+      console.error("Error actualizando producto", e);
+      throw e;
+    }
+  }
+
+  async function deleteProduct(id: string) {
+    try {
+      await productApi.deleteProduct(id);
+      await fetchProducts(); // Refrescar la tabla
+    } catch (e: any) {
+      console.error("Error al eliminar:", e.response?.data); // Mira la consola del navegador
+      alert(e.response?.data?.message || "No se pudo eliminar el producto");
+      // console.error("Error eliminando producto", e);
+      // throw e;
+    }
+  }
 
   return {
     products,
-    loading,
-    searchQuery,
-    categoryFilter,
     categories,
-    filteredProducts,
+    isLoading,
+    error,
+    filters,
+    totalPages,
+    totalItems,
+    fetchCategories,
     fetchProducts,
     createProduct,
     updateProduct,
+    deleteProduct,
   };
 });

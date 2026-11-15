@@ -4,6 +4,10 @@ import { businessApiReal } from './business.api';
 import { businessMock } from './mocks/business.mock';
 import { dashboardApiReal } from './dashboard.api';
 import { dashboardMock } from './mocks/dashboard.mock';
+import { productApiReal } from './product.api';
+import { categoryApiReal } from './category.api';
+import { productMock } from './mocks/product.mock';
+import { categoryMock } from './mocks/category.mock';
 
 // ─────────────────────────────────────────────
 // Interruptores por módulo
@@ -11,6 +15,8 @@ import { dashboardMock } from './mocks/dashboard.mock';
 const USE_MOCK_AUTH = import.meta.env.VITE_USE_MOCK_AUTH === 'true';
 const USE_MOCK_BUSINESS = import.meta.env.VITE_MOCK_BUSINESS === 'true';
 const USE_MOCK_DASHBOARD = import.meta.env.VITE_USE_MOCK_DASHBOARD === 'true';
+const USE_MOCK_PRODUCTS = import.meta.env.VITE_USE_MOCK_PRODUCTS === 'true';
+const USE_MOCK_CATEGORIES = import.meta.env.VITE_USE_MOCK_CATEGORIES === 'true';
 
 // Log de modo (util para debug)
 if(import.meta.env.DEV){
@@ -27,10 +33,8 @@ console.log(`🌐 API Base: ${import.meta.env.VITE_API_URL}`);
 export const authApi = USE_MOCK_AUTH ? authMock : authApiReal;
 export const businessApi = USE_MOCK_BUSINESS ? businessMock : businessApiReal;
 export const dashboardApi = USE_MOCK_DASHBOARD ? dashboardMock : dashboardApiReal;
-
-// Cuando agregue más módulos, será:
-// export const businessApi = USE_MOCK_BUSINESS ? businessMock : businessApiReal;
-// export const productApi = USE_MOCK_PRODUCTS ? productMock : productApiReal;
+export const productApi = USE_MOCK_PRODUCTS ? productMock : productApiReal;
+export const categoryApi = USE_MOCK_CATEGORIES ? categoryMock : categoryApiReal;
 
 // Exporta el tipo común (ambos tienen la misma interfaz)
 export type AuthApi = typeof authApiReal;

@@ -87,7 +87,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import apiClient from '../../config/axios';
+import apiClient from '../../config/axios.ts';
 import AppCard from '../../components/common/AppCard.vue';
 import AppTable from '../../components/common/AppTable.vue';
 import AppButton from '../../components/common/AppButton.vue';

@@ -1,8 +1,8 @@
-export type UserRole = 'OWNER' | 'MANAGER' | 'EMPLOYEE' | 'VIEWER';
+export type UserRole = 'OWNER' | 'MANAGER' | 'EMPLOYEE' | 'VIEWER' | 'SUPER_ADMIN';
 
 export interface Business {
   id: string;
-  name?: string;
+  name: string;
   businessType?: string;
   logoUrl?: string | null;
   currency?: string;
