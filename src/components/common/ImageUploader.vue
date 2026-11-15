@@ -29,3 +29,5 @@ const handleFile = (e: Event) => {
     <input type="file" ref="fileInput" class="hidden" accept="image/*" @change="handleFile" />
   </div>
 </template>
+
+<!-- NOTA : A futuro usar un servicio externo como cloudinary o firebase en lugar de enviar el Base64 al backend para almacenar imágenes localmente de esa manera se envia al servicio externo y me devuelve una url corta -->
