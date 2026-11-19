@@ -8,7 +8,7 @@ const routes: RouteRecordRaw[] = [
   // 1. REDIRECCIÓN PRINCIPAL
   // ─────────────────────────────────────────
   {
-    path: '/',
+    path: "/",
     redirect: ROUTES.DASHBOARD,
   },
 
@@ -16,19 +16,19 @@ const routes: RouteRecordRaw[] = [
   // 2. AUTH LAYOUT (Login y Register)
   // ─────────────────────────────────────────
   {
-    path: '/',
-    component: () => import('@/components/layout/AuthLayout.vue'),
+    path: "/",
+    component: () => import("@/components/layout/AuthLayout.vue"),
     children: [
       {
         path: ROUTES.LOGIN,
-        name: 'Login',
-        component: () => import('@/views/auth/Login.vue'),
+        name: "Login",
+        component: () => import("@/views/auth/Login.vue"),
         meta: { public: true },
       },
       {
         path: ROUTES.REGISTER,
-        name: 'Register',
-        component: () => import('@/views/auth/Register.vue'),
+        name: "Register",
+        component: () => import("@/views/auth/Register.vue"),
         meta: { public: true },
       },
     ],
@@ -38,70 +38,104 @@ const routes: RouteRecordRaw[] = [
   // 3. MAIN LAYOUT (Dashboard, Productos, Settings, etc.)
   // ─────────────────────────────────────────
   {
-    path: '/',
-    component: () => import('@/components/layout/MainLayout.vue'),
+    path: "/",
+    component: () => import("@/components/layout/MainLayout.vue"),
     children: [
       {
         path: ROUTES.DASHBOARD,
-        name: 'Dashboard',
-        component: () => import('@/views/dashboard/Dashboard.vue'),
+        name: "Dashboard",
+        component: () => import("@/views/dashboard/Dashboard.vue"),
         meta: { requiresAuth: true },
       },
       {
         path: ROUTES.SETTINGS,
-        name: 'Settings',
-        component: () => import('@/views/settings/Settings.vue'),
-        meta: { requiresAuth: true, role: ['OWNER'] },
+        name: "Settings",
+        component: () => import("@/views/settings/Settings.vue"),
+        meta: { requiresAuth: true, role: ["OWNER"] },
       },
       // ─── MÓDULO DE PRODUCTOS ───
       {
         path: ROUTES.PRODUCTS, // Asegúrate que en constants.ts esto sea '/products'
-        name: 'ProductList',
-        component: () => import('@/views/products/ProductList.vue'),
-        meta: { requiresAuth: true, module: 'hasProducts' },
+        name: "ProductList",
+        component: () => import("@/views/products/ProductList.vue"),
+        meta: { requiresAuth: true, module: "hasProducts" },
       },
       {
-        path: '/products/create',
-        name: 'ProductCreate',
-        // ⚠️ IMPORTANTE: Usa Mayúscula inicial (ProductCreate.vue)
-        component: () => import('@/views/products/ProductCreate.vue'),
-        meta: { requiresAuth: true, module: 'hasProducts', role: ['OWNER', 'MANAGER'] },
+        path: "/products/create",
+        name: "ProductCreate",
+        component: () => import("@/views/products/ProductCreate.vue"),
+        meta: {
+          requiresAuth: true,
+          module: "hasProducts",
+          role: ["OWNER", "MANAGER"],
+        },
       },
       {
-        path: '/products/:id/edit',
-        name: 'ProductEdit',
-        // ⚠️ IMPORTANTE: Usa Mayúscula inicial (ProductEdit.vue)
-        component: () => import('@/views/products/ProductEdit.vue'),
-        meta: { requiresAuth: true, module: 'hasProducts', role: ['OWNER', 'MANAGER'] },
+        path: "/products/:id/edit",
+        name: "ProductEdit",
+        component: () => import("@/views/products/ProductEdit.vue"),
+        meta: {
+          requiresAuth: true,
+          module: "hasProducts",
+          role: ["OWNER", "MANAGER"],
+        },
+      },
+      {
+        path: "/services",
+        name: "ServiceList",
+        component: () => import("@/views/services/ServiceList.vue"),
+        meta: { requiresAuth: true, module: "hasServices" },
+      },
+      {
+        path: "/services/register",
+        name: "ServiceRegister",
+        component: () => import("@/views/services/ServiceRegister.vue"),
+        meta: { requiresAuth: true, module: "hasServices" },
+      },
+      {
+        path: "/services/history",
+        name: "ServiceHistory",
+        component: () => import("@/views/services/ServiceHistory.vue"),
+        meta: { requiresAuth: true, module: "hasServices" },
+      },
+      {
+        path: "/services/create",
+        name: "ServiceCreate",
+        component: () => import("@/views/services/ServiceCreate.vue"),
+        meta: {
+          requiresAuth: true,
+          module: "hasServices",
+          role: ["OWNER", "MANAGER"],
+        },
       },
     ],
   },
 
   // ─────────────────────────────────────────
-  // 4. ONBOARDING (Sin layout, pantalla completa)
+  // 4. ONBOARDING (Sin layout, pantalla completa)9
   // ─────────────────────────────────────────
   {
     path: ROUTES.ONBOARDING_BUSINESS_TYPE,
-    name: 'OnboardingBusinessType',
-    component: () => import('@/views/onboarding/BusinessTypeSelector.vue'),
+    name: "OnboardingBusinessType",
+    component: () => import("@/views/onboarding/BusinessTypeSelector.vue"),
     meta: { requiresAuth: true },
   },
   {
     path: ROUTES.ONBOARDING_PLANS,
-    name: 'OnboardingPlans',
-    component: () => import('@/views/onboarding/PricingPlans.vue'),
+    name: "OnboardingPlans",
+    component: () => import("@/views/onboarding/PricingPlans.vue"),
     meta: { requiresAuth: true },
   },
   {
     path: ROUTES.ONBOARDING_PAYMENT,
-    name: 'OnboardingPayment',
-    component: () => import('@/views/onboarding/PaymentCheckout.vue'),
+    name: "OnboardingPayment",
+    component: () => import("@/views/onboarding/PaymentCheckout.vue"),
     meta: { requiresAuth: true },
   },
   {
     path: ROUTES.ONBOARDING_BUSINESS_NAME,
-    name: 'OnboardingBusinessName',
-    component: () => import('@/views/onboarding/BusinessNameSetup.vue'),
+    name: "OnboardingBusinessName",
+    component: () => import("@/views/onboarding/BusinessNameSetup.vue"),
     meta: { requiresAuth: true },
   },
 ];

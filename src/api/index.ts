@@ -8,6 +8,8 @@ import { productApiReal } from './product.api';
 import { categoryApiReal } from './category.api';
 import { productMock } from './mocks/product.mock';
 import { categoryMock } from './mocks/category.mock';
+import { serviceApiReal } from './service.api';
+import { serviceMock } from './mocks/service.mock';
 
 // ─────────────────────────────────────────────
 // Interruptores por módulo
@@ -17,6 +19,7 @@ const USE_MOCK_BUSINESS = import.meta.env.VITE_MOCK_BUSINESS === 'true';
 const USE_MOCK_DASHBOARD = import.meta.env.VITE_USE_MOCK_DASHBOARD === 'true';
 const USE_MOCK_PRODUCTS = import.meta.env.VITE_USE_MOCK_PRODUCTS === 'true';
 const USE_MOCK_CATEGORIES = import.meta.env.VITE_USE_MOCK_CATEGORIES === 'true';
+const USE_MOCK_SERVICES = import.meta.env.VITE_USE_MOCK_SERVICES === 'true';
 
 // Log de modo (util para debug)
 if(import.meta.env.DEV){
@@ -35,6 +38,7 @@ export const businessApi = USE_MOCK_BUSINESS ? businessMock : businessApiReal;
 export const dashboardApi = USE_MOCK_DASHBOARD ? dashboardMock : dashboardApiReal;
 export const productApi = USE_MOCK_PRODUCTS ? productMock : productApiReal;
 export const categoryApi = USE_MOCK_CATEGORIES ? categoryMock : categoryApiReal;
+export const serviceApi = USE_MOCK_SERVICES ?serviceMock : serviceApiReal; 
 
 // Exporta el tipo común (ambos tienen la misma interfaz)
 export type AuthApi = typeof authApiReal;
