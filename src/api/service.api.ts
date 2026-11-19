@@ -18,6 +18,11 @@ export const serviceApiReal = {
     return data.data;
   },
 
+  async getServiceById(id: string): Promise<Service> {
+    const { data } = await apiClient.get<ApiResponse<{ service: Service }>>(`/services/${id}`);
+    return data.data.service;
+  },
+
   async deleteService(id: string): Promise<void> {
     await apiClient.delete(`/services/${id}`);
   },

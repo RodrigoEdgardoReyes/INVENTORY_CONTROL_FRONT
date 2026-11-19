@@ -108,6 +108,16 @@ const routes: RouteRecordRaw[] = [
           role: ["OWNER", "MANAGER"],
         },
       },
+      {
+        path: "/services/:id/edit",
+        name: "ServiceEdit",
+        component: () => import("@/views/services/ServiceEdit.vue"),
+        meta: {
+          requiresAuth: true,
+          module: "hasServices",
+          role: ["OWNER", "MANAGER"],
+        },
+      },
     ],
   },
 

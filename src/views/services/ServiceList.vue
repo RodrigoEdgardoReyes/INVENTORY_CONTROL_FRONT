@@ -46,7 +46,7 @@ const handleDelete = async (id: string) => {
             <td class="px-6 py-4 text-sm text-gray-900">{{ formatCurrency(srv.price) }}</td>
             <td class="px-6 py-4 text-sm text-gray-500">{{ srv.commissionRate }}%</td>
             <td class="px-6 py-4 text-sm text-right space-x-2">
-              <button class="text-indigo-600 hover:text-indigo-900">Editar</button>
+              <button @click="router.push(`/services/${srv.id}/edit`)" class="text-indigo-600 hover:text-indigo-900">Editar</button>
               <button @click="handleDelete(srv.id)" class="text-red-600 hover:text-red-900">Eliminar</button>
             </td>
           </tr>

@@ -66,8 +66,19 @@ export const useServiceStore = defineStore('services', () => {
     return record;
   }
 
+  async function updateService(id: string, data: ServiceFormData) {
+  try {
+    const updated = await serviceApi.updateService(id, data);
+    await fetchServices(); // Refrescamos la lista
+    return updated;
+  } catch (e) {
+    console.error('Error actualizando servicio', e);
+    throw e;
+  }
+}
+
   return {
     services, serviceRecords, isLoading, error,
-    fetchServices, fetchServiceRecords, createService, deleteService, registerService
+    fetchServices, fetchServiceRecords, createService, deleteService, registerService, updateService
   };
 });
