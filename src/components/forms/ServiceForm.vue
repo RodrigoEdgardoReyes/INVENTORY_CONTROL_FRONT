@@ -17,7 +17,7 @@ const form = ref<ServiceFormData>({
   description: '',
   price: 0,
   durationMinutes: 30,
-  commissionRate: 0,
+  commissionPercentage: 0,
   ...props.initialData
 });
 
@@ -43,7 +43,7 @@ const handleSubmit = () => {
       </div>
       <div>
         <label class="block text-sm font-medium text-gray-700">Comisión (%) *</label>
-        <input v-model.number="form.commissionRate" required type="number" min="0" max="100" class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+        <input v-model.number="form.commissionPercentage" required type="number" min="0" max="100" class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
         <p class="mt-1 text-xs text-gray-500">Porcentaje que gana el empleado por este servicio.</p>
       </div>
     </div>

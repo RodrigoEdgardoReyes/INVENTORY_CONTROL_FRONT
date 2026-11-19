@@ -23,7 +23,7 @@ onMounted(async () => {
       description: service.description || '',
       price: Number(service.price), 
       durationMinutes: service.durationMinutes,
-      commissionRate: service.commissionRate,
+      commissionPercentage: service.commissionPercentage || 0,
       businessId: service.businessId
     };
   } catch (error) {

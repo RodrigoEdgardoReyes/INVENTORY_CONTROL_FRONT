@@ -50,7 +50,7 @@ export const useServiceStore = defineStore('services', () => {
     const businessId = authStore.user?.businessId;
     if (!businessId) throw new Error('No hay negocio activo');
 
-    const payload = { ...data, businessId, price: Number(data.price), commissionRate: Number(data.commissionRate) };
+    const payload = { ...data, businessId, price: Number(data.price), commissionPercentage: Number(data.commissionPercentage) };
     const newService = await serviceApi.createService(payload);
     await fetchServices();
     return newService;

@@ -5,7 +5,7 @@ export interface Service {
   description?: string;
   price: string | number; 
   durationMinutes: number;
-  commissionRate: number; 
+  commissionPercentage: number; 
   active: boolean;
   createdAt: string;
   updatedAt: string;
@@ -17,14 +17,14 @@ export interface ServiceFormData {
   description?: string;
   price: number;
   durationMinutes: number;
-  commissionRate: number;
+  commissionPercentage: number;
 }
 
 export interface ServiceRecord {
   id: string;
   businessId: string;
   serviceId: string;
-  serviceName: string; // Útil para mostrar en el historial
+  serviceName: string; 
   employeeId: string;
   employeeName?: string;
   clientName?: string;
