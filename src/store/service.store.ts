@@ -3,7 +3,7 @@ import { ref } from 'vue';
 // import { serviceApiReal as serviceApi } from '@/api/service.api'; 
 import { serviceApi } from '@/api';
 import { useAuthStore } from '@/store/authStore';
-import type { Service, ServiceFormData, ServiceRecord, ServiceRecordFormData } from '@/types/service.types';
+import type { Service, ServiceFormData, ServiceRecord, ServiceRecordFormData, BatchRecordPayload, BatchRecordResponse } from '@/types/service.types';
 
 export const useServiceStore = defineStore('services', () => {
   const services = ref<Service[]>([]);
@@ -77,8 +77,20 @@ export const useServiceStore = defineStore('services', () => {
   }
 }
 
+async function registerTicketBatch(payload: BatchRecordPayload): Promise<BatchRecordResponse> {
+    try {
+      const result = await serviceApi.registerBatch(payload);
+      // Refrescamos el historial para que aparezca el nuevo cobro
+      await fetchServiceRecords(); 
+      return result;
+    } catch (e: unknown) {
+      console.error('Error en cobro batch:', e);
+      throw e; // Relanzamos el error para que la vista lo capture
+    }
+  }
+
   return {
     services, serviceRecords, isLoading, error,
-    fetchServices, fetchServiceRecords, createService, deleteService, registerService, updateService
+    fetchServices, fetchServiceRecords, createService, deleteService, registerService, updateService, registerTicketBatch
   };
 });
