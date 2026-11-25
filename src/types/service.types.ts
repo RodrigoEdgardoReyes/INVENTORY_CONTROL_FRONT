@@ -27,10 +27,17 @@ export interface ServiceRecord {
   serviceName: string; 
   employeeId: string;
   employeeName?: string;
+  employee?: {
+    id: string;
+    name: string;
+    email?: string;
+  } | null;
   clientName?: string;
-  price: number;
-  commissionAmount: number;
+  quantity?: number;
+  price: string;
+  commission: string;
   createdAt: string;
+  serviceDate?: string;
 }
 
 export interface ServiceRecordFormData {

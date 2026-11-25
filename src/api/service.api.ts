@@ -60,7 +60,7 @@ export const serviceApiReal = {
   async getServiceRecords(businessId: string): Promise<ServiceRecord[]> {
     const { data } = await apiClient.get<
       ApiResponse<{ records: ServiceRecord[] }>
-    >(`/service-records/business/${businessId}`);
+    >(`/services/records/business/${businessId}`);
     return data.data.records;
   },
 
