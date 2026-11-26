@@ -118,6 +118,18 @@ const routes: RouteRecordRaw[] = [
           role: ["OWNER", "MANAGER"],
         },
       },
+      {
+        path: "/sales",
+        name: "SaleList",
+        component: () => import("@/views/sales/SaleList.vue"),
+        meta: { requiresAuth: true, module: "hasExits" },
+      },
+      {
+        path: "/sales/create",
+        name: "SaleCreate",
+        component: () => import("@/views/sales/SaleCreate.vue"),
+        meta: { requiresAuth: true, module: "hasExits" },
+      },
     ],
   },
 
