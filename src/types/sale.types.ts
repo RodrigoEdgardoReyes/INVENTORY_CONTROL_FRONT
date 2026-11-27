@@ -11,19 +11,31 @@ export interface SaleItem {
   purchasePrice: string | number; // Para calcular la ganancia
 }
 
+
+export interface SaleDetailItem {
+    id: string;
+    saleId: string;
+    productId: string;
+    productName: string;
+    quantity: number;
+    unitPrice: string | number;
+    total: string | number;
+    purchasePrice: string | number;
+    profit: string | number;
+}
 export interface Sale {
   id: string;
   businessId: string;
   clientName: string;
-  clientNit?: string;
-  invoiceNumber?: string;
+  clientNit?: string | null;
+  invoiceNumber?: string | null;
   paymentMethod: PaymentMethod;
-  subtotal: number;
-  tax: number;
-  total: number;
-  profit: number;
+  subtotal: string | number;
+  tax: string | number;
+  total: string | number;
+  profit?: string | number;
   createdAt: string;
-  items?: SaleItem[]; // verificar, si el backend lo incluye
+  details?: SaleDetailItem[]; 
 }
 
 // Para el Carrito (Frontend)

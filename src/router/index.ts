@@ -130,6 +130,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import("@/views/sales/SaleCreate.vue"),
         meta: { requiresAuth: true, module: "hasExits" },
       },
+      {
+        path: "/sales/:id",
+        name: "SaleDetail",
+        component: () => import("@/views/sales/SaleDetail.vue"),
+        meta: { requiresAuth: true, module: "hasExits" },
+      },
     ],
   },
 
